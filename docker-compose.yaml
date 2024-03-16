@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   postgres-server:
-    image: timescale/timescaledb:2.10.0-pg14 #por que desatualizado? Zabbix 6.4.3 -> Unsupported DB! timescaledb version is 21100 which is higher than maximum of 21099
+    image: timescale/timescaledb:2.10.0-pg14
     restart: always
     ports:
       - 57919:5432
@@ -14,9 +14,9 @@ services:
       - ./pgdata:/var/lib/postgresql/data
 
   zabbix-server:
-    build:
-      dockerfile: Dockerfile-zabbix-server-pgsql
-    #image: zabbix/zabbix-server-pgsql:6.4.2-ubuntu
+    #build:
+    #  dockerfile: Dockerfile-zabbix-server-pgsql
+    image: zabbix/zabbix-server-pgsql:6.4.3-ol
     restart: always
     environment: 
       POSTGRES_USER: zabbix
@@ -42,7 +42,7 @@ services:
       - ./externalscripts:/usr/lib/zabbix/externalscripts
 
   zabbix-web: 
-    image: zabbix/zabbix-web-nginx-pgsql:6.4.3-ubuntu
+    image: zabbix/zabbix-web-nginx-pgsql:6.4.3-ol
     restart: always
     environment:
       POSTGRES_USER: zabbix
