@@ -50,6 +50,7 @@ services:
       POSTGRES_DB: zabbix
       ZBX_SERVER_HOST: zabbix-server
       ZBX_POSTMAXSIZE: 64M
+      ZBX_UPLOADMAXFILESIZE: 5M
       PHP_TZ: "America/Sao_Paulo"
       ZBX_MAXEXECUTIONTIME: 500
     depends_on:
