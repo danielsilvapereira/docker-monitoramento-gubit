@@ -10,6 +10,7 @@ services:
       POSTGRES_PASSWORD: alqqnx728469ACRIML
       POSTGRES_DB: zabbix
       PG_DATA: /var/lib/postgresql/data
+      TS_TUNE_MAX_CONNS: 70
     volumes:
       - ./pgdata:/var/lib/postgresql/data
 
