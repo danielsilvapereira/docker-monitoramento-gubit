@@ -15,9 +15,7 @@ services:
       - ./pgdata:/var/lib/postgresql/data
 
   zabbix-server:
-    #build:
-    #  dockerfile: Dockerfile-zabbix-server-pgsql
-    image: zabbix/zabbix-server-pgsql:6.4.3-ol
+    image: zabbix/zabbix-server-pgsql:7.0.9-ol
     restart: always
     environment: 
       POSTGRES_USER: zabbix
@@ -43,7 +41,7 @@ services:
       - ./externalscripts:/usr/lib/zabbix/externalscripts
 
   zabbix-web: 
-    image: zabbix/zabbix-web-nginx-pgsql:6.4.3-ol
+    image: zabbix/zabbix-web-nginx-pgsql:7.0.0-ol
     restart: always
     environment:
       POSTGRES_USER: zabbix
@@ -61,7 +59,7 @@ services:
       - 57917:8080
 
   grafana:
-    image:  grafana/grafana:10.0.1
+    image:  grafana/grafana:11.1.0
     user: "0"
     restart: unless-stopped
     ports:
