@@ -1,25 +1,34 @@
-version: '3.1'
+version: '3.8'
+
 services:
   postgres-server:
+    container_name: zabbix-postgres
     image: timescale/timescaledb:2.10.0-pg14
     restart: always
-    ports:
-      - 57919:5432
+    expose:
+      - "5432"
     environment:
       POSTGRES_USER: zabbix
-      POSTGRES_PASSWORD: alqqnx728469ACRIML
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: zabbix
-      PG_DATA: /var/lib/postgresql/data
       TS_TUNE_MAX_CONNS: 70
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - zabbix-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zabbix"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   zabbix-server:
+    container_name: zabbix-server
     image: zabbix/zabbix-server-pgsql:7.0.9-ol
     restart: always
-    environment: 
+    environment:
       POSTGRES_USER: zabbix
-      POSTGRES_PASSWORD: alqqnx728469ACRIML
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: zabbix
       ZBX_HISTORYSTORAGETYPES: log,text
       ZBX_DEBUGLEVEL: 3
@@ -39,13 +48,16 @@ services:
     volumes:
       - ./alertscripts:/usr/lib/zabbix/alertscripts
       - ./externalscripts:/usr/lib/zabbix/externalscripts
+    networks:
+      - zabbix-net
 
-  zabbix-web: 
+  zabbix-web:
+    container_name: zabbix-web
     image: zabbix/zabbix-web-nginx-pgsql:7.0.0-ol
     restart: always
     environment:
       POSTGRES_USER: zabbix
-      POSTGRES_PASSWORD: alqqnx728469ACRIML
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: zabbix
       ZBX_SERVER_HOST: zabbix-server
       ZBX_POSTMAXSIZE: 64M
@@ -57,13 +69,23 @@ services:
       - zabbix-server
     ports:
       - 57917:8080
+    networks:
+      - zabbix-net
 
   grafana:
-    image:  grafana/grafana:11.1.0
+    container_name: grafana
+    image: grafana/grafana:11.1.0
     user: "0"
     restart: unless-stopped
     ports:
-     - 57918:3000
+      - 57918:3000
     volumes:
-#      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./grafana/dados:/var/lib/grafana
+    networks:
+      - zabbix-net
+
+volumes:
+  pgdata:
+
+networks:
+  zabbix-net:
