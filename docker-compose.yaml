@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres-server:
     container_name: zabbix-postgres
