@@ -76,7 +76,7 @@ services:
     user: "0"
     restart: unless-stopped
     environment:
-      - GF_FEATURE_TOGGLES_ENABLE=dashboardNewLayouts,useV2DashboardsAPI,kubernetesFeatureToggles,kubernetesDashboards,kubernetesClientDashboardsFolders,kubernetesClientDashboardsFolders
+      - GF_FEATURE_TOGGLES_ENABLE=dashboardNewLayouts,useV2DashboardsAPI,kubernetesFeatureToggles,kubernetesDashboards,kubernetesClientDashboardsFolders,provisioning,grafanaAPIServerEnsureKubectlAccess
       - GF_PANELS_DISABLE_SANITIZE_HTML=true
     ports:
       - 8082:3000
